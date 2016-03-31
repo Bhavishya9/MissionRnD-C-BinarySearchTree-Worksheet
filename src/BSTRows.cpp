@@ -29,9 +29,45 @@ struct node{
 	struct node *right;
 };
 
+int no_of_elements = 0, rear = 0, front = 0,length_of_queue=0;
+struct node **queue;
 
+void insert_to_queue(struct node *item)
+{
+	length_of_queue++;
+	queue = (struct node **)realloc(queue, length_of_queue);
+	queue[rear++] = item;
+	no_of_elements++;
+}
 
+struct node *delete_from_queue()
+{
+	struct node *item;
+	item = queue[front];
+	front++;
+	no_of_elements--;
+	return item;
+}
 int* BSTRighttoLeftRows(struct node* root)
 {
-    return NULL;
+	int size = 0,index=0;
+	int *arr = (int *)malloc(size*sizeof(int));
+	struct node *current = root;
+	if (root == NULL)
+	{
+		return NULL;
+	}
+	while (no_of_elements != 0)
+	{
+		current = delete_from_queue();
+		size++;
+		arr = (int *)realloc(arr, size);
+		arr[index++] = current->data;
+		if (current->left != NULL)
+			insert_to_queue(current->left);
+		if (current->right != NULL)
+			insert_to_queue(current->right);
+	}
+	return arr;
+    
 }

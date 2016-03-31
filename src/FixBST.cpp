@@ -32,6 +32,39 @@ struct node{
 	struct node *right;
 };
 
-void fix_bst(struct node *root){
+struct node *left_part(struct node *root, int rootdata)
+{
+	if (root == NULL)
+		return 0;
+	//if (root->right != NULL)
+		left_part(root->left, rootdata);
+	if (root->data > rootdata)
+		return root;
+	//if (root->right!=NULL)
+		left_part(root->right, rootdata);
+}
 
+struct node *right_part(struct node *root, int rootdata)
+{
+	if (root == NULL)
+		return 0;
+	//if (root->right != NULL)
+		right_part(root->left, rootdata);
+	if (root->data < rootdata)
+		return root;
+	//if (root->right != NULL)
+		right_part(root->right, rootdata);
+}
+
+void fix_bst(struct node *root){
+	if (root != NULL)
+	{
+		struct node *left_sub_tree;
+		struct node *right_sub_tree;
+		left_sub_tree = left_part(root->left, root->data);
+		right_sub_tree = right_part(root->right, root->data);
+		int temp = left_sub_tree->data;
+		left_sub_tree->data = right_sub_tree->data;
+		right_sub_tree->data = temp;
+	}
 }
