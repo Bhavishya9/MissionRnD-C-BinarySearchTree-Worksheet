@@ -29,45 +29,49 @@ struct node{
 	struct node *right;
 };
 
-int no_of_elements = 0, rear = 0, front = 0,length_of_queue=0;
-struct node **queue;
-
-void insert_to_queue(struct node *item)
-{
-	length_of_queue++;
-	queue = (struct node **)realloc(queue, length_of_queue);
-	queue[rear++] = item;
-	no_of_elements++;
+int height1(struct node *root){
+	int h_left, h_right;
+	if (root == NULL)
+		return 0;
+	h_left = height1(root->left);
+	h_right =height1(root->right);
+	if (h_left > h_right)
+		return 1 + h_left;
+	else
+		return 1 + h_right;
 }
 
-struct node *delete_from_queue()
+int total_elements(struct node *root)
 {
-	struct node *item;
-	item = queue[front];
-	front++;
-	no_of_elements--;
-	return item;
+	if (root == NULL)
+		return 0;
+	return 1 + total_elements(root->left) + total_elements(root->right);
+}
+
+int insertion(int *arr, int level, int index,struct node *root)
+{
+	if (root == NULL)
+		return index;
+	if (level == 1)
+		arr[index++] = root->data;
+	else
+	{
+		index=insertion(arr, level - 1, index, root->right);
+		index=insertion(arr, level - 1, index, root->left);
+	}
+	return index;
 }
 int* BSTRighttoLeftRows(struct node* root)
 {
-	int size = 0,index=0;
-	int *arr = (int *)malloc(size*sizeof(int));
-	struct node *current = root;
 	if (root == NULL)
-	{
 		return NULL;
-	}
-	while (no_of_elements != 0)
+	int size = total_elements(root);
+	int height = height1(root);
+	int *arr = (int *)malloc(size*sizeof(int));
+	int index = 0,level=0;
+	for (level = 1; level <= height; level++)
 	{
-		current = delete_from_queue();
-		size++;
-		arr = (int *)realloc(arr, size);
-		arr[index++] = current->data;
-		if (current->left != NULL)
-			insert_to_queue(current->left);
-		if (current->right != NULL)
-			insert_to_queue(current->right);
+		index = insertion(arr, level, index, root);
 	}
 	return arr;
-    
 }

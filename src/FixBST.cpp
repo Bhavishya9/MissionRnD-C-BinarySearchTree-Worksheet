@@ -34,26 +34,26 @@ struct node{
 
 struct node *left_part(struct node *root, int rootdata)
 {
+	static struct node *temp = NULL;
 	if (root == NULL)
-		return 0;
-	//if (root->right != NULL)
-		left_part(root->left, rootdata);
+		return temp;
 	if (root->data > rootdata)
-		return root;
-	//if (root->right!=NULL)
-		left_part(root->right, rootdata);
+		temp = root;
+	left_part(root->left, rootdata);
+	left_part(root->right, rootdata);
+	return temp;
 }
 
 struct node *right_part(struct node *root, int rootdata)
 {
+	static struct node *temp1 = NULL;
 	if (root == NULL)
-		return 0;
-	//if (root->right != NULL)
-		right_part(root->left, rootdata);
+		return temp1;
 	if (root->data < rootdata)
-		return root;
-	//if (root->right != NULL)
-		right_part(root->right, rootdata);
+		temp1=root;
+	right_part(root->left, rootdata);
+	right_part(root->right, rootdata);
+	return temp1;
 }
 
 void fix_bst(struct node *root){
